@@ -1,0 +1,25 @@
+{
+  "name": "nosql-social-media-api-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BBelk/nosql-social-media-api-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BBelk/nosql-social-media-api-project/issues"
+  },
+  "homepage": "https://github.com/BBelk/nosql-social-media-api-project#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^4.10.0"
+  }
+}
