@@ -53,6 +53,13 @@ const ThoughtSchema = new Schema(
     }
 );
 
+ThoughtSchema.virtual('reactionCount').get(function() {
+    if (this.reactions.length > 0) {
+        return this.reactions.length;
+    } else {
+        return 0;
+    }
+});
 
 
 

@@ -4,7 +4,8 @@ module.exports = {
   //get all users
   async getAllUsers(req, res) {
       try {
-          const allUsers = await User.find({});
+          const allUsers = await User.find({})
+          .select('-__v');
           if (!allUsers.length) {
               res.json({ message: 'No users to find' });
               return;
@@ -20,11 +21,9 @@ module.exports = {
   async getUserById({ params }, res) {
       try {
           const singleUserData = await User.findOne({ _id: params.id })
-              // .populate('thoughts')
-              .populate('friends')
-              // .select(['-__v', '-_id', '-email']);
+          .select('-__v')
           if (!singleUserData) {
-              res.json({ message: 'Could not find a user by that Id' });
+              res.json({ message: 'Could not find a user with that Id' });
               return;
           }
           res.json(singleUserData);
