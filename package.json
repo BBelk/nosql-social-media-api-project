@@ -20,6 +20,7 @@
   "homepage": "https://github.com/BBelk/nosql-social-media-api-project#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "moment": "^2.29.4",
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.5"
   }
