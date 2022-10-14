@@ -19,15 +19,15 @@ module.exports = {
   // get one user by id
   async getUserById({ params }, res) {
       try {
-          const dbuserData = await User.findOne({ _id: params.id })
-              .populate('thoughts')
+          const singleUserData = await User.findOne({ _id: params.id })
+              // .populate('thoughts')
               .populate('friends')
-              .select(['-__v', '-_id', '-email']);
-          if (!dbuserData) {
+              // .select(['-__v', '-_id', '-email']);
+          if (!singleUserData) {
               res.json({ message: 'Could not find a user by that Id' });
               return;
           }
-          res.json(dbuserData);
+          res.json(singleUserData);
       } catch (err) {
           res.json(err)
       }
@@ -36,16 +36,69 @@ module.exports = {
   // create user
   async createUser({ body }, res) {
       try {
-          const createUser = await User.create(body);
-          if (!createUser) {
-              res.status(400).json({ message: 'A new user could not be created. Please try again.' });
+          const newUser = await User.create(body);
+          if (!newUser) {
+              res.status(400).json({ message: 'A new user not created, error.' });
           }
-          res.json(createUser);
+          res.json(newUser);
       } catch (err) {
-          res.json(err, "HELLO");
+          res.json(err);
       }
+  },
+
+  async updateUser({ params, body }, res) {
+    try {
+        const updateUserData = await User.findOneAndUpdate({ _id: params.id }, body, { new: true });
+        res.json(updateUserData);
+    }
+    catch (err) {
+        res.json(err);
+    }
+},
+
+async deleteUser({ params }, res) {
+  try {
+      const userToDelete = await User.findOneAndDelete({ _id: params.id }, { new: true });
+      if (!userToDelete) {
+          res.status(404).json({ message: 'No user found with this id' });
+      }
+      res.json(userToDelete);
   }
-};
+  catch (err) {
+      res.json(err);
+  }
+},
+
+async addFriend({ params }, res) {
+  try {
+      const newFriendData = await User.findOne({ _id: params.friendId });
+      const userToFriendData = await User.findOneAndUpdate(
+          { _id: params.userId },
+          { $push: { friends: newFriendData._id } },
+          { new: true }
+      ).populate('friends');
+      res.json(userToFriendData);
+  }
+  catch (err) {
+      res.json(err);
+  }
+},
+
+async deleteFriend({ params }, res) {
+  try {
+      const userData = await User.findOneAndUpdate(
+          { _id: params.userId },
+          { $pull: { friends: { $in: [params.friendId] } } },
+          { new: true }
+      ).populate('friends');
+      await userData.save();
+      res.json(userData);
+  }
+  catch (err) {
+      res.json(err);
+  }
+},
+}
 
 // router
 //     .route('/')

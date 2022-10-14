@@ -8,16 +8,16 @@ router
     .post(createUser)
 
 // /api/users/:id (GET, PUT, DELETE)    
-// router
-//     .route('/:id')
-//     .get(getUserById) 
-//     .put(updateUser)
-//     .delete(deleteUser)
+router
+    .route('/:id')
+    .get(getUserById) 
+    .put(updateUser)
+    .delete(deleteUser)
 
 // // remove a users associated thoughts when deleted       
-// router
-//     .route('/:userId/friends/:friendId')
-//     .post(addFriend)
-//     .delete(deleteFriend)
+router
+    .route('/:userId/friends/:friendId')
+    .post(addFriend)
+    .delete(deleteFriend)
 
 module.exports = router;    
