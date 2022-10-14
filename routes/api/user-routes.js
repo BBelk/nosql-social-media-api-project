@@ -1,21 +1,23 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { getAllUsers, createUser, getUserById, updateUser, deleteUser, addFriend, deleteFriend} = require('../../controllers/user-controller');
 
-router.get('/', async (req, res) => {
-  //get all users
-});
+// /api/users (GET, POST)
+router
+    .route('/')
+    .get(getAllUsers)
+    .post(createUser)
 
-router.get('/', async (req, res) => {
-  //get all users
-});
+// /api/users/:id (GET, PUT, DELETE)    
+router
+    .route('/:id')
+    .get(getUserById) 
+    .put(updateUser)
+    .delete(deleteUser)
 
+// remove a users associateds thoughts when deleted       
+router
+    .route('/:userId/friends/:friendId')
+    .post(addFriend)
+    .delete(deleteFriend)
 
-
-
-
-
-//////////////////
-
-router.get('/:userId/friends/:friendId', async (req, res) => {
-  //get all users
-})
+module.exports = router;    
