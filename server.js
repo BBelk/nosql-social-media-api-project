@@ -1,55 +1,23 @@
 const express = require('express');
-const mongodb = require('mongodb').MongoClient;
+const db = require('./config/connection');
+const routes = require('./routes');
 
+// const cwd = process.cwd();
+
+const PORT = 3001;
 const app = express();
-const port = 3001;
 
-const connectionStringURI = `mongodb://127.0.0.1:27017/numbersDB`;
+// Note: not necessary for the Express server to function. This just helps indicate what activity's server is running in the terminal.
+// const activity = cwd.includes('01-Activities')
+//   ? cwd.split('/01-Activities/')[1]
+//   : cwd;
 
-let db;
-
-const data = [
-  { number: 1 },
-  { number: 7 },
-  { number: -3 },
-  { number: 11 },
-  { number: 12 },
-  { number: 1000 },
-  { number: 8 },
-  { number: 2 },
-  { number: 15 },
-  { number: 4 },
-  { number: 2 },
-  { number: 90 },
-];
-
-mongodb.connect(
-  connectionStringURI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err, client) => {
-    db = client.db();
-    db.collection('numberList').deleteMany({});
-    db.collection('numberList').insertMany(data, (err, res) => {
-      if (err) {
-        return console.log(err);
-      }
-      console.log('Data inserted');
-    });
-
-    app.listen(port, () => {
-      console.log(`Example app listening at http://localhost:${port}`);
-    });
-  }
-);
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(routes);
 
-// TODO: Update route to use cursor methods
-app.get('/read', (req, res) => {
-  db.collection('numberList')
-    .find()
-    .toArray((err, results) => {
-      if (err) throw err;
-      res.send(results);
-    });
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API server  running on port ${PORT}!`);
+  });
 });
