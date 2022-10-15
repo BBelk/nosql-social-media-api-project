@@ -1,15 +1,17 @@
-const User  = require('../models/User');
+const { User, Thought }  = require('../models');
 
 module.exports = {
   //get all users
   async getAllUsers(req, res) {
       try {
           const allUsers = await User.find({})
-          .select('-__v');
+          .select('-__v')
+          .populate('thoughts')
           if (!allUsers.length) {
               res.json({ message: 'No users to find' });
               return;
           }
+          
           res.json(allUsers);
       }
       catch (err) {
@@ -22,6 +24,7 @@ module.exports = {
       try {
           const singleUserData = await User.findOne({ _id: params.id })
           .select('-__v')
+          .populate('thoughts')
           if (!singleUserData) {
               res.json({ message: 'Could not find a user with that Id' });
               return;
@@ -57,6 +60,9 @@ module.exports = {
 
 async deleteUser({ params }, res) {
   try {
+    const allUserThoughts = await Thought.deleteMany({
+      user: params.id
+    });
       const userToDelete = await User.findOneAndDelete({ _id: params.id }, { new: true });
       if (!userToDelete) {
           res.status(404).json({ message: 'No user found with this id' });
@@ -98,21 +104,3 @@ async deleteFriend({ params }, res) {
   }
 },
 }
-
-// router
-//     .route('/')
-//     .get(getAllUsers)
-//     .post(createUser)
-
-// // /api/users/:id (GET, PUT, DELETE)    
-// router
-//     .route('/:id')
-//     .get(getUserById) 
-//     .put(updateUser)
-//     .delete(deleteUser)
-
-// // remove a users associateds thoughts when deleted       
-// router
-//     .route('/:userId/friends/:friendId')
-//     .post(addFriend)
-//     .delete(deleteFriend)

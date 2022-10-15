@@ -13,8 +13,7 @@ router
     .get(getUserById) 
     .put(updateUser)
     .delete(deleteUser)
-
-// // remove a users associated thoughts when deleted       
+    
 router
     .route('/:userId/friends/:friendId')
     .post(addFriend)

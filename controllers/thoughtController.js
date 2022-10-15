@@ -5,7 +5,7 @@ module.exports = {
     async getAllThoughts({ params, body }, res) {
         try {
             const allThoughts = await Thought.find({})
-
+            .select('-__v');
             if (!allThoughts.length) {
                 res.json({ message: 'No thoughts to share!' });
                 return;
@@ -21,7 +21,8 @@ module.exports = {
         try {
             const thoughtData = await Thought.findOne({ _id: params.thoughtId }
             )
-                .populate('user');
+            .select('-__v')
+            .populate('user');
             res.json(thoughtData);
         }
         catch (err) {

@@ -38,14 +38,6 @@ const UserSchema = new Schema(
     }
 );
 
-// UserSchema.post('findOneAndDelete', async function (thought) {
-//     console.log('These are your thoughts: ' + thought)
-//     if (thought) {
-//         const data = await Thought.deleteMany({ _id: { $in: [thought.thoughts] } } );
-//         console.log('This is data: ' + data);
-//     }
-// });
-
 UserSchema.virtual('friendCount').get(function() {
     if (this.friends.length > 0) {
         return this.friends.length;
