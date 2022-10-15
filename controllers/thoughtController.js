@@ -29,7 +29,6 @@ module.exports = {
         }
     },
 
-    // add thought (comment) to user
     async addThought({ params, body }, res) {
         try {
             const addThought = await Thought.create(body);
@@ -46,4 +45,57 @@ module.exports = {
             res.json(err);
         }
     },
+
+    
+    async updateThought({ params, body }, res) {
+      try {
+          const thoughtData = await Thought.findOneAndUpdate({ _id: params.thoughtId }, body, { new: true });
+          res.json(thoughtData);
+      }
+      catch (err) {
+          res.json(err);
+      }
+  },
+
+  async removeThought({ params }, res) {
+    try {
+        const thoughtData = await Thought.findOneAndDelete(
+            { _id: params.thoughtId }
+        )
+        await thoughtData.save();
+        res.json(thoughtData);
+    }
+    catch (err) {
+        res.json(err);
+    }
+},
+
+  async addReaction({ params, body }, res) {
+      try {
+
+          const thoughtData = await Thought.findOneAndUpdate(
+              { _id: params.thoughtId },
+              { $push: { reactions: body } },
+              { new: true, runValidators: true }
+          )
+          res.json(thoughtData);
+      }
+      catch (err) {
+          res.json(err);
+      }
+  },
+
+  async removeReaction({ params }, res) {
+      try {
+          const thoughtData = await Thought.findOneAndUpdate(
+              { _id: params.thoughtId },
+              { $pull: { reactions: { reactionId: params.reactionId } } },
+              { new: true, runValidators: true }
+          )
+          res.json(thoughtData);
+      }
+      catch (err) {
+          res.json(err);
+      }
+  }, 
 };
