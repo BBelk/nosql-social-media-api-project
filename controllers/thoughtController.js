@@ -92,7 +92,10 @@ module.exports = {
               { _id: params.thoughtId },
               { $pull: { reactions: { reactionId: params.reactionId } } },
               { new: true, runValidators: true }
-          )
+          );
+          const reactionToRemove = await Reaction.deleteOne({
+            reactionId: params.reactionId
+          });
           res.json(thoughtData);
       }
       catch (err) {
